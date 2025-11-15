@@ -15,6 +15,13 @@ namespace QuadraticEquationSolve
             double discriminant = b * b - 4 * a * c;
             QuadraticEquationType q;
 
+            if (a == 0)
+            {
+                Console.WriteLine("It is a linear equation");
+                q = QuadraticEquationType.oneRoot;
+                x1 = x2 = -c / b;
+                return q;
+            }
             if (discriminant < 0)
             {
                 q = QuadraticEquationType.noSoultions;
