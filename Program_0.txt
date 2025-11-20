@@ -1,72 +1,43 @@
-﻿using System;
+using System;
 
 namespace QuadraticEquationSolve
 {
-
+    enum QuadraticEquationType
+    {
+        noSoultions = -1,
+        oneRoot = 0,
+        twoRoots = 1
+    }
     class Solve
     {
-        public static int FindRoots(double a, double b, double c, out double? x1, out double? x2)
+        public static QuadraticEquationType FindRoots(double a, double b, double c, out double? x1, out double? x2)
         {
             double discriminant = b * b - 4 * a * c;
-            int flag = -1;
+            QuadraticEquationType q;
 
             if (a == 0)
             {
                 Console.WriteLine("It is a linear equation");
+                q = QuadraticEquationType.oneRoot;
                 x1 = x2 = -c / b;
-                flag = 0;
-                return flag;
+                return q;
             }
             if (discriminant < 0)
             {
-               x1 = x2 = null;
-                flag = -1;
+                q = QuadraticEquationType.noSoultions;
+                x1 = x2 = null;
             } else if(discriminant == 0){
+                q = QuadraticEquationType.oneRoot;
                 x1 = x2 = -b / (2 * a);
-                flag = 0;
             } else
             {
+                q = QuadraticEquationType.twoRoots;
                 x1 = (-b + Math.Sqrt(discriminant)) / (2 * a);
                 x2 = (-b - Math.Sqrt(discriminant)) / (2 * a);
-                flag = 1;
             }
 
-            return flag;
-
-        }
-
-        public static (int, double?, double?) FindRoots(double a, double b, double c)
-        {
-            int flag = -1;
-            double? x1 = null, x2 = null;
-            double discriminant = b * b - 4 * a * c;
-            
-            if (a == 0)
-            {
-                Console.WriteLine("It is a linear equation");
-                x1 = x2 = -c / b;
-                flag = 0;
-            }
-            else if (discriminant < 0)
-            {
-                x1 = x2 = null;
-                flag = -1;
-            }
-            else if (discriminant == 0)
-            {
-                x1 = x2 = -b / (2 * a);
-                flag = 0;
-            }
-            else
-            {
-                x1 = (-b + Math.Sqrt(discriminant)) / (2 * a);
-                x2 = (-b - Math.Sqrt(discriminant)) / (2 * a);
-                flag = 1;
-            }
-
-            return (flag, x1, x2);
-
-        }
+            return q;
+        } 
     }
     class Program
     {
@@ -79,19 +50,18 @@ namespace QuadraticEquationSolve
                 double a = double.Parse(temp.Split()[0]);
                 double b = double.Parse(temp.Split()[1]);
                 double c = double.Parse(temp.Split()[2]);
-            //    int qe = Solve.FindRoots(a, b, c, out double? x1, out double? x2);
-                (int qe, double? x1, double? x2) = Solve.FindRoots(a, b, c);
+                QuadraticEquationType qe = Solve.FindRoots(a, b, c, out double? x1, out double? x2);
                 switch (qe)
                 {
-                    case -1:
+                    case QuadraticEquationType.noSoultions:
                         Console.WriteLine("There are no real roots of the equation with coefficients {0}, {1}, {2}",
                             a, b, c);
                         break;
-                    case 0:
-                        Console.WriteLine("There is one real double (single if a = 0) root of the equation with coefficients {0}, {1}, {2}: x1 = {3:N3}",
+                    case QuadraticEquationType.oneRoot:
+                        Console.WriteLine("There is one real double root of the equation with coefficients {0}, {1}, {2}: x1 = {3:N3}",
                             a, b, c, x1);
                         break;
-                    case 1:
+                    case QuadraticEquationType.twoRoots:
                         Console.WriteLine("There are two real roots of the equation with coefficients {0}, {1}, {2}: x1 = {3:N3}, x2 = {4:N3}",
                             a, b, c, x1, x2);
                         break;
